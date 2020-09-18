@@ -1,8 +1,115 @@
-import React from 'react';
-import { Card,CardImg,CardBody,CardTitle,CardText } from 'reactstrap';
+import React, { Component } from 'react';
+import { Card,CardImg,CardBody,CardTitle,CardText,Modal,ModalBody,ModalHeader,Button,Row,Col,Label } from 'reactstrap';
 import {Link} from 'react-router-dom';
 import {Breadcrumb,BreadcrumbItem} from 'reactstrap';
+import { render } from '@testing-library/react';
+import { Control, LocalForm, Errors } from 'react-redux-form';
 
+
+class CommentForm extends Component{
+
+  constructor(props){
+    super(props);
+    this.toggleModal = this.toggleModal.bind(this);
+
+    this.state = {
+
+      isModalOpen:false
+    }
+    
+    
+
+  }
+  toggleModal(){
+    this.setState(
+        {
+            isModalOpen:!this.state.isModalOpen
+        }
+    );
+  }
+    handleSubmit(values) {
+      console.log('Current State is: ' + JSON.stringify(values));
+      alert('Current State is: ' + JSON.stringify(values));
+  }
+  render(){
+    const required = (val) => val && val.length;
+    const maxLength = (len) => (val) => !(val) || (val.length <= len);
+    const minLength = (len) => (val) => val && (val.length >= len);
+    return(
+      <div>
+        <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+          <ModalHeader >Submit Comment</ModalHeader>
+          <ModalBody>
+            <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
+            <Row className="form-group">
+            <Label htmlFor="rating" md={12}>Rating</Label>
+            </Row>
+            <Row className="form-group">
+              <Col md={{size: 12}}>
+                  <Control.select model=".rating" name="rating"
+                      className="form-control">
+                      <option>1</option>
+                      <option>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                  </Control.select>
+              </Col>
+          </Row>
+            <Row className="form-group">
+              <Label htmlFor="your_name" md={10}>Your Name</Label>
+              </Row>
+              <Row className="form-group">
+                <Col md={12}>
+                  <Control.text model=".your_name" id="your_name" name="your_name"
+                      placeholder="Your Name"
+                      className="form-control" md={10}
+                      validators={
+                          {required,maxLength:maxLength(15),minLength:minLength(3)}}
+                        />
+                  <Errors
+                      className="text-danger"
+                      model=".your_name"
+                      show="touched"
+                      messages={{
+                          required: 'Required',
+                          minLength: 'Must be greater than 2 characters',
+                          maxLength: 'Must be 15 characters or less'
+                      }}
+                      >
+                  </Errors>
+                  </Col>
+              
+              </Row>
+              <Row className="form-group">
+                  <Label htmlFor="comment" md={10}>Comment</Label>
+                  </Row>
+                  <Row className="form-group">
+                  <Col md={12}>
+                      <Control.textarea model=".comment" id="comment" name="comment"
+                          rows="12"
+                          className="form-control"  />
+                  </Col>
+              </Row>
+              <Row className="form-group">
+                  <Col md={{size:12}}>
+                      <Button type="submit" color="primary">
+                      Submit
+                      </Button>
+                  </Col>
+              </Row>
+            </LocalForm>
+          </ModalBody>
+        </Modal>
+        <Button  onClick={this.toggleModal}>
+           <span className="fa fa-pencil fa-lg"></span>Submit Comment
+       </Button>
+      </div>
+      
+    );
+  }
+  
+}
 
   function RenderDish({dish}){
    
@@ -15,7 +122,7 @@ import {Breadcrumb,BreadcrumbItem} from 'reactstrap';
         </CardBody>
       </Card>);    
   }
-  function RenderComment({comment}){
+  function RenderComment({comment,mod}){
     if(comment!=null)
     return(
       <div className="col-12 col-md-5 m-1">
@@ -32,6 +139,7 @@ import {Breadcrumb,BreadcrumbItem} from 'reactstrap';
             );
           })}
         </ul>
+       <CommentForm />
       </div>
     );
 }
@@ -52,7 +160,7 @@ const DishDetail = (props) => {
             <div className="row">
                 <RenderDish dish={props.dish} />
                 <RenderComment comment={props.comments} />
-            </div>
+              </div>
           </div>
     );
   else
