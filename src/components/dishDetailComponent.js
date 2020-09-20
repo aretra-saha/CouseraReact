@@ -28,8 +28,9 @@ class CommentForm extends Component{
     );
   }
     handleSubmit(values) {
-      console.log('Current State is: ' + JSON.stringify(values));
-      alert('Current State is: ' + JSON.stringify(values));
+      this.toggleModal();
+      this.props.addcomment(this.props.dishId, values.rating, values.author, values.comment);
+
   }
   render(){
     const required = (val) => val && val.length;
@@ -38,7 +39,7 @@ class CommentForm extends Component{
     return(
       <div>
         <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
-          <ModalHeader >Submit Comment</ModalHeader>
+          <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
           <ModalBody>
             <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
             <Row className="form-group">
@@ -101,7 +102,7 @@ class CommentForm extends Component{
             </LocalForm>
           </ModalBody>
         </Modal>
-        <Button  onClick={this.toggleModal}>
+        <Button  onClick={this.toggleModal} color="basic">
            <span className="fa fa-pencil fa-lg"></span>Submit Comment
        </Button>
       </div>
@@ -122,7 +123,7 @@ class CommentForm extends Component{
         </CardBody>
       </Card>);    
   }
-  function RenderComment({comment,mod}){
+  function RenderComment({comment,addcomment,dishId}){
     if(comment!=null)
     return(
       <div className="col-12 col-md-5 m-1">
@@ -139,7 +140,7 @@ class CommentForm extends Component{
             );
           })}
         </ul>
-       <CommentForm />
+        <CommentForm dishId={dishId} addcomment={addcomment} />
       </div>
     );
 }
@@ -159,7 +160,10 @@ const DishDetail = (props) => {
             </div>
             <div className="row">
                 <RenderDish dish={props.dish} />
-                <RenderComment comment={props.comments} />
+                <RenderComment comment={props.comments}
+        addcomment={props.addcomment}
+        dishId={props.dish.id}
+      />
               </div>
           </div>
     );
