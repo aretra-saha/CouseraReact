@@ -5,6 +5,7 @@ import {Breadcrumb,BreadcrumbItem} from 'reactstrap';
 import { render } from '@testing-library/react';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import {Loading } from './LoadingComponent';
+import { baseUrl } from '../shared/baseUrl';
 
 
 class CommentForm extends Component{
@@ -17,8 +18,6 @@ class CommentForm extends Component{
 
       isModalOpen:false
     }
-    
-    
 
   }
   toggleModal(){
@@ -30,7 +29,7 @@ class CommentForm extends Component{
   }
     handleSubmit(values) {
       this.toggleModal();
-      this.props.addcomment(this.props.dishId, values.rating, values.author, values.comment);
+      this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
 
   }
   render(){
@@ -117,14 +116,14 @@ class CommentForm extends Component{
    
       return(
       <Card className="col-12 col-md-5 m-1"> 
-        <CardImg width="100%" src={dish.image} alt={dish.name} />
+        <CardImg top src={baseUrl + dish.image} alt={dish.name} />
         <CardBody>
             <CardTitle>{dish.name}</CardTitle>
             <CardText>{dish.description}</CardText>
         </CardBody>
       </Card>);    
   }
-  function RenderComment({comment,addcomment,dishId}){
+  function RenderComment({comment,addComment,dishId}){
     if(comment!=null)
     return(
       <div className="col-12 col-md-5 m-1">
@@ -141,7 +140,7 @@ class CommentForm extends Component{
             );
           })}
         </ul>
-        <CommentForm dishId={dishId} addcomment={addcomment} />
+        <CommentForm dishId={dishId} addComment={addComment} />
       </div>
     );
 }
@@ -182,7 +181,7 @@ const DishDetail = (props) => {
             <div className="row">
                 <RenderDish dish={props.dish} />
                 <RenderComment comment={props.comments}
-        addcomment={props.addcomment}
+        addComment={props.addComment}
         dishId={props.dish.id}
       />
               </div>
