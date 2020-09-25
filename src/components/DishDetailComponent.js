@@ -30,8 +30,8 @@ class CommentForm extends Component{
   }
     handleSubmit(values) {
       this.toggleModal();
-      this.props.postComment(this.props.dishId, values.rating, values.author, values.comment);
-
+      this.props.postComment(this.props.dishId, values.rating, values.your_name, values.comment);
+      console.log("Commenting: "+ this.props.dishId +" "+ values.rating +" "+ values.your_name +" "+ values.comment);
   }
   render(){
     const required = (val) => val && val.length;
@@ -48,7 +48,7 @@ class CommentForm extends Component{
             </Row>
             <Row className="form-group">
               <Col md={{size: 12}}>
-                  <Control.select model=".rating" name="rating"
+                  <Control.select model=".rating" name="rating" id="rating"
                       className="form-control">
                       <option>1</option>
                       <option>2</option>
